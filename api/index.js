@@ -1,12 +1,11 @@
 import { MongoClient, ObjectId } from "mongodb";
 
-const uri = process.env.MONGO_URI;
 let cachedClient = null;
 let cachedDb = null;
 
 async function connectDB() {
   if (cachedClient && cachedDb) return { client: cachedClient, db: cachedDb };
-  const client = new MongoClient(uri);
+  const client = new MongoClient(process.env.MONGO_URI);
   await client.connect();
   const db = client.db("CourseManagementDB");
   cachedClient = client;
@@ -64,6 +63,7 @@ export default async function handler(req, res) {
   }
 }
 
+module.exports = app;
 
 
 
