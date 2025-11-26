@@ -1,79 +1,3 @@
-// import { MongoClient, ObjectId } from "mongodb";
-
-// let cachedClient = null;
-// let cachedDb = null;
-
-// async function connectDB() {
-//   if (cachedClient && cachedDb) return { client: cachedClient, db: cachedDb };
-//   const client = new MongoClient(process.env.MONGO_URI);
-//   await client.connect();
-//   const db = client.db("CourseManagementDB");
-//   cachedClient = client;
-//   cachedDb = db;
-//   return { client, db };
-// }
-
-// export default async function handler(req, res) {
-//   try {
-//     const { db } = await connectDB();
-//     const coursesCollection = db.collection("courses");
-
-//     const { method } = req;
-//     const { id } = req.query;
-
-//     if (method === "GET") {
-//       if (id) {
-//         // Single course
-//         if (!ObjectId.isValid(id)) {
-//           return res.status(400).json({ error: "Invalid course ID format" });
-//         }
-//         const course = await coursesCollection.findOne({ _id: new ObjectId(id) });
-//         if (!course) return res.status(404).json({ error: "Course not found" });
-//         return res.status(200).json(course);
-//       } else {
-//         // All courses
-//         const courses = await coursesCollection.find().toArray();
-//         return res.status(200).json(courses);
-//       }
-//     }
-
-//     if (method === "POST") {
-//       const newCourse = {
-//         ...req.body,
-//         createdAt: new Date(),
-//         title: req.body.title || "Untitled Course",
-//       };
-//       const result = await coursesCollection.insertOne(newCourse);
-//       const insertedCourse = await coursesCollection.findOne({ _id: result.insertedId });
-//       return res.status(201).json(insertedCourse);
-//     }
-
-//     if (method === "DELETE") {
-//       if (!id) return res.status(400).json({ error: "ID required for deletion" });
-//       if (!ObjectId.isValid(id)) return res.status(400).json({ error: "Invalid course ID" });
-//       const result = await coursesCollection.deleteOne({ _id: new ObjectId(id) });
-//       if (result.deletedCount === 1) return res.status(204).end();
-//       return res.status(404).json({ error: "Course not found for deletion" });
-//     }
-
-//     return res.status(405).json({ error: `Method ${method} not allowed` });
-//   } catch (err) {
-//     console.error("Serverless function error:", err);
-//     return res.status(500).json({ error: "Internal Server Error" });
-//   }
-// }
-
-// module.exports = app;
-
-
-
-
-
-
-
-
-
-
 const express = require ('express');
 const cors = require ('cors');
 const dotenv = require("dotenv");
@@ -96,8 +20,8 @@ let coursesCollection;
 
 async function run () {
   try {
-    // await client.connect();
-    // await client.db("admin").command({ ping: 1 });
+    await client.connect();
+    await client.db("admin").command({ ping: 1 });
     console.log (
       '✅ Pinged your deployment. Successfully connected to MongoDB!'
     );
@@ -144,7 +68,7 @@ app.get ('/api/courses/:id', async (req, res) => {
   }
 });
 
-app.post ('/api/courses', async (req, res) => {
+app.post ('/api/coursess', async (req, res) => {
   if (!coursesCollection)
     return res.status (503).send ('Database not initialized.');
 
