@@ -16,18 +16,17 @@ app.use (express.json ());
 const client = new MongoClient(process.env.MONGODB_URI);
 
 
-let coursesCollection;
 
 async function run () {
   try {
-    await client.connect();
-    await client.db("admin").command({ ping: 1 });
+    // await client.connect();
+    // await client.db("admin").command({ ping: 1 });
     console.log (
       '✅ Pinged your deployment. Successfully connected to MongoDB!'
     );
 
     const database = client.db ('CourseManagementDB');
-    coursesCollection = database.collection ('courses');
+    const coursesCollection = database.collection ('courses');
     console.log ("Database and Collection 'courses' ready.");
 
 
@@ -42,6 +41,7 @@ app.get ('/api/courses', async (req, res) => {
     res.status (500).send ('Internal Server Error.');
   }
 });
+
 
 // GET Single Course
 app.get ('/api/courses/:id', async (req, res) => {
@@ -68,7 +68,7 @@ app.get ('/api/courses/:id', async (req, res) => {
   }
 });
 
-app.post ('/api/coursess', async (req, res) => {
+app.post ('/api/courses', async (req, res) => {
   if (!coursesCollection)
     return res.status (503).send ('Database not initialized.');
 
@@ -113,13 +113,15 @@ app.delete ('/api/courses/:id', async (req, res) => {
 
 
 
+module.exports = app;
+
     app.get ('/', (req, res) => {
       res.send ('Freelance Job Portal Server is running');
     });
 
-    app.listen (port, () => {
-      console.log (`Express server running on http://localhost:${port}`);
-    });
+    // app.listen (port, () => {
+    //   console.log (`Express server running on http://localhost:${port}`);
+    // });
   } catch (error) {
     console.error ('❌ MongoDB connection error:', error);
   }
